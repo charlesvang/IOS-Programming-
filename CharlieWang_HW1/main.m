@@ -20,22 +20,24 @@ BOOL Add_Item (NSString * item_name, NSString * desc , double rcost , double wco
     
     Object_Info *newitem = [[Object_Info alloc]init];
 
+    //Lazy initiation
+    
     if ( !inventory) {
         inventory = [[NSMutableDictionary alloc] init];
     }
     
     if (inventory[item_name]){
+        NSLog(@"Error, Duplicate");
         return false;
     }
     
-    [newitem setDescription: desc];
     [newitem setDescription: desc];
     [newitem setNum_on_Hand:0];
     [newitem setNumSold:0];
     [newitem setRetailValue:rcost];
     [newitem setWholeSaleValue:wcost];
-    
     inventory[item_name] = newitem;
+    
     return true;
 }
 
@@ -95,14 +97,28 @@ double Profit_Calc (){
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
-        BOOL check = Add_Item (@"Iphone", @"Iphone 8 Made in China", 755.0, 450.0);
-        Add_Stock(@"Iphone", 10);
         
+        //Add first Item
+        BOOL check = Add_Item (@"Iphone", @"Iphone 8 Made in China", 755.0, 450.0);
+        //Add Stocks
+        Add_Stock(@"Iphone", 10);
+        //Sell the Item
         Sell_item(@"Iphone", 3);
         
+        //Adding Second Item
         BOOL check2 = Add_Item(@"Keyboard", @"Pokr3 Keyboard", 150.0, 45.0);
         Add_Stock(@"Keyboard", 10);
         Sell_item(@"Keyboard", 3);
+        
+        
+        
+        BOOL check3 = Add_Item(@"Keyboard3", @"Pokr3 Keyboard", 150.0, 45.0);
+        Add_Stock(@"Keyboard", 10);
+        Sell_item(@"Keyboard", 3);
+
+        
+        Delete_Item(@"Keyboard3");
+        //Prints out the object information
         
         for(id key in inventory){
             Object_Info *temp = [[Object_Info alloc]  init];
