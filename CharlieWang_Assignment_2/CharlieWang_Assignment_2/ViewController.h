@@ -10,7 +10,6 @@
 
 @interface ViewController : UIViewController
 @property (weak, nonatomic) IBOutlet UIImageView *productImage;
-
 @property (weak, nonatomic) IBOutlet UILabel *labelProduct;
 @property (weak, nonatomic) IBOutlet UILabel *labelDescription;
 @property (weak, nonatomic) IBOutlet UILabel *labelCost;
@@ -18,6 +17,8 @@
 
 - (IBAction)addStock:(id)sender;
 - (IBAction)minusStock:(id)sender;
+- (IBAction)nextProduct:(id)sender;
+- (IBAction)previousProduct:(id)sender;
 
 @end
 

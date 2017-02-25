@@ -10,7 +10,7 @@
 
 @interface ViewController ()
 @property (strong, nonatomic) NSMutableArray* inventory;
-@property (nonatomic) int index;
+@property (nonatomic) NSInteger index;
 @end
 
 @implementation ViewController
@@ -23,48 +23,52 @@
     
     
     self.index = 0;
+    self.inventory = [[NSMutableArray alloc] init];
+    
+    
     NSString* hhkbproduct = @"Happy Hacking Keyboard";
     NSString* hhkbdescription = @"Happy Hacking Keyboard made in Japan";
     double hhkbcost = 250.0;
     int hhkbstock = 5;
     
+    //------Display HHKB Image ------
+    self.productImage.image = [UIImage imageNamed:@"hhkb.png"];
+    self.labelProduct.text = hhkbproduct;
+    self.labelDescription.text = hhkbdescription;
+    self.labelCost.text = [NSString stringWithFormat:@"$%.02f", hhkbcost];
+    self.labelQuantity.text =[NSString stringWithFormat:@"%d",hhkbstock];
     
-    _productImage.image = [UIImage imageNamed:@"hhkb.png"];
-    _labelProduct.text = hhkbproduct;
-    _labelDescription.text = hhkbdescription;
-    _labelCost.text = [NSString stringWithFormat:@"$%.02f", hhkbcost];
-    _labelQuantity.text =[NSString stringWithFormat:@"%d",hhkbstock];
-    
-    self.inventory = [[NSMutableArray alloc] init];
+    //initiate hhkb product array
     NSMutableArray *hhkb = [[NSMutableArray alloc] init];
-    [hhkb addObject:hhkbproduct];
-    [hhkb addObject:hhkbdescription];
     NSNumber *cost = [NSNumber numberWithFloat:hhkbcost];
     NSNumber *numonhand = [NSNumber numberWithInteger:hhkbstock];
+    
+    //adding information to the hhkb product
+    [hhkb addObject:hhkbproduct];
+    [hhkb addObject:hhkbdescription];
     [hhkb addObject:cost];
     [hhkb addObject:numonhand];
     [hhkb addObject:[UIImage imageNamed:@"hhkb.png"]];
     [self.inventory addObject:hhkb];
     
+    //---------------New Product Leopold Keyboard --------
+    NSString* leopoldproduct = @"Leopold Keyboard";
+    NSString* leopold_description = @"Leopold Keyboard made in Taiwan";
+    double leopoldcost = 150.0;
+    int Leopoldstock = 10;
     
+    //initiate leopold product array
+    NSMutableArray *leopold = [[NSMutableArray alloc] init];
     
-    //[self.inventory addObject:[NSMutableArray arrayWithObjects:@"HHKB",@"Happy Hacking Keyboard made in Japan",245.0,10, [UIImage imageNamed:@"hhkb.png"],nil]];
-    /**
-    [self.inventory addObject:[NSMutableArray arrayWithObjects:@"Leopold Keyboard",@"Leopold Keyboard made in Taiwan",145.0,5,[UIImage imageNamed:@"leopold.png"],nil]];
-    [self.inventory addObject:[NSMutableArray arrayWithObjects:@"IBM model M keyboard",@"IBM Keyboard made in 1984",200.0,1,[UIImage imageNamed:@"modelm.png"],nil]];
+    NSNumber *leocost = [NSNumber numberWithFloat:leopoldcost];
+    NSNumber *leonumonhand = [NSNumber numberWithInteger:Leopoldstock];
     
-    
-    NSMutableArray *subarry = [self.inventory objectAtIndex: (NSUInteger)index];
-**/
-    /**
-    self.product_name = [subarry objectAtIndex:0];
-    self.descrip = [subarry objectAtIndex:1];
-    self.cost = [subarry objectAtIndex:2];
-    self.num_on_hand = [subarry objectAtIndex:3];
-    NSString* imgsource = [subarry objectAtIndex:4];
-    self.product_image.image = [UIImage imageNamed:imgsource];
-    **/
-    
+    [leopold addObject:leopoldproduct];
+    [leopold addObject:leopold_description];
+    [leopold addObject:leocost];
+    [leopold addObject:leonumonhand];
+    [leopold addObject:[UIImage imageNamed:@"leopold.png"]];
+    [self.inventory addObject:leopold];
     
 }
 
@@ -76,27 +80,76 @@
 
 
 - (IBAction)addStock:(id)sender {
-    NSMutableArray* tempStock = [self.inventory objectAtIndex:0];
-    NSNumber* currentStock = [tempStock objectAtIndex:4];
-    int val = _labelQuantity.text.intValue;
+    NSMutableArray* tempStock = [self.inventory objectAtIndex:self.index];
+    NSNumber* currentStock = [tempStock objectAtIndex:3];
+    int val = self.labelQuantity.text.intValue;
     val += 1;
     currentStock = [NSNumber numberWithInt:val];
-    [tempStock replaceObjectAtIndex:4 withObject:currentStock];
-    [self.inventory replaceObjectAtIndex:0 withObject:tempStock];
-    _labelQuantity.text = [NSString stringWithFormat:@"%d", val];
+    [tempStock replaceObjectAtIndex:3 withObject:currentStock];
+    [self.inventory replaceObjectAtIndex:self.index withObject:tempStock];
+    self.labelQuantity.text = [NSString stringWithFormat:@"%d", val];
 }
 
 - (IBAction)minusStock:(id)sender {
-    NSMutableArray* tempStock = [self.inventory objectAtIndex:0];
-    NSNumber* currentStock = [tempStock objectAtIndex:4];
-    int val = _labelQuantity.text.intValue;
+    NSMutableArray* tempStock = [self.inventory objectAtIndex:self.index];
+    NSNumber* currentStock = [tempStock objectAtIndex:3];
+    int val = self.labelQuantity.text.intValue;
     val -= 1;
     if (val <= 0){
         val = 0;
     }
     currentStock = [NSNumber numberWithInt:val];
-    [tempStock replaceObjectAtIndex:4 withObject:currentStock];
-    [self.inventory replaceObjectAtIndex:0 withObject:tempStock];
-    _labelQuantity.text = [NSString stringWithFormat:@"%d", val];
+    [tempStock replaceObjectAtIndex:3 withObject:currentStock];
+    [self.inventory replaceObjectAtIndex:self.index withObject:tempStock];
+    self.labelQuantity.text = [NSString stringWithFormat:@"%d", val];
 }
+
+
+- (IBAction)nextProduct:(id)sender {
+    self.index += 1;
+    
+    if (self.index >= [self.inventory count]){
+        self.index = [self.inventory count] -1;
+    }
+        
+    NSMutableArray* tempStock = [self.inventory objectAtIndex:self.index];
+    NSNumber* tempcost = [tempStock objectAtIndex:2];
+    NSNumber* tempquant = [tempStock objectAtIndex:3];
+    int quantval = [tempquant intValue];
+
+    [self.productImage setImage:[tempStock objectAtIndex:4]];
+    NSLog(@"sup");
+
+    self.labelProduct.text = [tempStock objectAtIndex:0];
+    self.labelDescription.text = [tempStock objectAtIndex:1];
+    double costval = [tempcost doubleValue];
+    self.labelCost.text = [NSString stringWithFormat:@"$%.02f", costval];
+    self.labelQuantity.text = [NSString stringWithFormat:@"%d", quantval];
+    
+    
+}
+
+- (IBAction)previousProduct:(id)sender {
+    self.index -= 1;
+    
+    if (self.index <= 0 ){
+        self.index = 0;
+    }
+        
+    NSMutableArray* tempStock = [self.inventory objectAtIndex:self.index];
+    NSNumber* tempcost = [tempStock objectAtIndex:2];
+    NSNumber* tempquant = [tempStock objectAtIndex:3];
+    int quantval = [tempquant intValue];
+    double costval = [tempcost doubleValue];
+    
+    [self.productImage setImage:[tempStock objectAtIndex:4]];
+    NSLog(@"sup");
+    
+    self.labelProduct.text = [tempStock objectAtIndex:0];
+    self.labelDescription.text = [tempStock objectAtIndex:1];
+    self.labelCost.text = [NSString stringWithFormat:@"$%.02f", costval];
+    self.labelQuantity.text = [NSString stringWithFormat:@"%d", quantval];
+
+}
+
 @end
